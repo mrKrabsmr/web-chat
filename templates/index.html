@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <div class="list-group">
+        <pre id="output" class="list-group-item"></pre>
+    </div>
+    <div class="form-label">
+        <textarea name="" id="input" cols="10" rows="5" class="form-control"></textarea>
+        <button onclick="send()" class="btn btn-light">Send</button>
+    </div>
+    <script>
+        var input = document.getElementById("input");
+        var output = document.getElementById("output");
+        var socket = new WebSocket("ws://localhost:8080/echo");
+
+        socket.onmessage = function (e) {
+            message = JSON.parse(e.data)
+            output.innerHTML += message.sender + ": " + message.text + "\n";
+        };
+
+        function send() {
+            socket.send(input.value);
+            input.value = "";
+        }
+    </script>   
+    <style>
+        pre {
+            color: green;
+            text-align: center;
+        }
+
+        .form-label {
+            width: 20%;
+            height: 20px;
+            margin: 10px 0px 0px 40%;
+        }
+
+        .btn {
+            margin-left: 45%;
+            text-align: center;
+        }
+        
+        .list_group {
+            border: cornsilk;
+            border-bottom: black;
+        }
+
+    </style>
+</body>
+</html>
