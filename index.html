@@ -9,12 +9,16 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="styles/index.css">
   </head>
   <body class="light-theme">
     <button id="themeToggle" class="btn btn-light">Переключить тему</button>
-    <div class="list-group">
-      <pre id="output" class="list-group-item"></pre>
-    </div>
+    <input type="text" id="username" placeholder="имя">
+    <div class="chat-body">
+      <div class="list-group">
+        <pre id="output" class="list-group-item"></pre>
+      </div>
+    <div>
     <div id="in" class="form-label">
       <textarea
         name=""
@@ -22,21 +26,84 @@
         cols="10"
         rows="5"
         class="form-control"
+        placeholder="Введите текст сообщения"
       ></textarea>
       <button onclick="send()" class="btn btn-light">Send</button>
     </div>
+    <style>
+      pre {
+          color: green;
+          text-align: center;
+      }
+
+      .form-label {
+          width: 20%;
+          height: 20px;
+          margin: 10px 0px -110px 10%;
+          position: fixed;
+          bottom: 40%;
+          border: #000000;
+          border-radius: 10px;
+      }
+
+      .btn {
+          margin-left: 45%;
+          text-align: center;
+          margin-top: 0.5rem;
+          margin-bottom: 0.5rem;
+
+          background-color: #e9ecef;
+      }
+
+      .chat-body {
+          background: white;
+          width: 40%;
+          margin-top: 40px;
+          margin-left: 80px;
+          overflow-y: scroll;
+          height: 500px;
+      }
+
+      .list_group {
+          border: cornsilk;
+          border-bottom: black;
+          background-color: white;
+      }
+
+      .list-group-item {
+          padding: 6px 8px;
+          margin: 4px 0;
+      }
+
+      .light-theme {
+          background-color: #f0ebeb; 
+          color: #000000;
+      }
+
+      .dark-theme {
+          background-color: #121212 !important;
+          color: #ffffff !important;
+      }
+
+      #username {
+          margin-left: 50px;
+          width: 150px;
+      }
+    </style>
     <script>
+      var username = document.getElementById("username")
       var input = document.getElementById("input")
       var output = document.getElementById("output")
-      var socket = new WebSocket("ws://localhost:8080/echo")
+      var socket = new WebSocket("ws://localhost:8080/chat")
 
       socket.onmessage = function (e) {
         message = JSON.parse(e.data)
-        output.innerHTML += message.sender + ": " + message.text + "\n"
+        output.innerHTML += (message.sender || "anonim") + ": " + message.text + "\n"
       }
 
       function send() {
-        socket.send(input.value)
+        data = JSON.stringify({"sender": username.value, "text": input.value})
+        socket.send(data)
         input.value = ""
       }
       document
@@ -62,47 +129,6 @@
           }
         })
     </script>
-    <style>
-      pre {
-        color: green;
-        text-align: center;
-      }
-
-      .form-label {
-        width: 20%;
-        height: 20px;
-        margin: 10px 0px 0px 40%;
-        position: fixed;
-        bottom: 40%;
-      }
-
-      .btn {
-        margin-left: 45%;
-        text-align: center;
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-
-        background-color: #e9ecef;
-      }
-
-      .list_group {
-        border: cornsilk;
-        border-bottom: black;
-      }
-      .list-group-item {
-        padding: 6px 8px;
-        margin: 4px 0;
-      }
-
-      .light-theme {
-        background-color: #ffffff;
-        color: #000000;
-      }
-      .dark-theme {
-        background-color: #121212 !important;
-        color: #ffffff !important;
-      }
-    </style>
   </body>
 </html>
 

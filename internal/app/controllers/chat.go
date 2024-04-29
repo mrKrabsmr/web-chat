@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -19,18 +20,18 @@ var upgrader = websocket.Upgrader{
 var clients []websocket.Conn
 
 func (c *Controller) Mailing() {
-	message := Message{
-		Sender: "ботяра",
-		Text:   "за минуту ничего не произошло",
-	}
-
-	jsonData, err := json.Marshal(message)
-		if err != nil {
-			return
+	for {
+		message := Message{
+			Sender: "ботяра",
+			Text:   fmt.Sprintf("в чате онлайн участников: %d", len(clients)),
 		}
 
+		jsonData, err := json.Marshal(message)
+			if err != nil {
+				return
+			}
 
-	for {
+
 		for _, client := range clients {
 			client.WriteMessage(1, jsonData)
 		}
@@ -63,20 +64,9 @@ func (c *Controller) Chat(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		message := Message{
-			Sender: conn.RemoteAddr().String(),
-			Text:   string(msg),
-		}
-
-		jsonData, err := json.Marshal(message)
-		if err != nil {
-			c.logger.Error(err)
-			return
-		}
-
 		for _, client := range clients {
 			c.logger.Info(client.RemoteAddr().String())
-			if err = client.WriteMessage(msgType, jsonData); err != nil {
+			if err = client.WriteMessage(msgType, msg); err != nil {
 				c.logger.Error(err)
 				return
 			}
