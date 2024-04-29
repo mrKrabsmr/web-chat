@@ -13,7 +13,7 @@
   </head>
   <body class="light-theme">
     <button id="themeToggle" class="btn btn-light">Переключить тему</button>
-    <input type="text" id="username" placeholder="имя">
+    <input type="text" id="username" class=""placeholder="имя">
     <div class="chat-body">
       <div class="list-group">
         <pre id="output" class="list-group-item"></pre>
@@ -37,13 +37,12 @@
       }
 
       .form-label {
-          width: 20%;
-          height: 20px;
-          margin: 10px 0px -110px 10%;
-          position: fixed;
+          width: 88.3%;
           bottom: 40%;
           border: #000000;
           border-radius: 10px;
+          position: fixed;
+          top: 68%;
       }
 
       .btn {
@@ -51,23 +50,23 @@
           text-align: center;
           margin-top: 0.5rem;
           margin-bottom: 0.5rem;
-
           background-color: #e9ecef;
       }
 
       .chat-body {
           background: white;
-          width: 40%;
-          margin-top: 40px;
-          margin-left: 80px;
+          height: 590px;  
           overflow-y: scroll;
-          height: 500px;
+          margin-left: 80px;
+          margin-right: 80px;
+          margin-top: 40px;          
       }
 
       .list_group {
           border: cornsilk;
           border-bottom: black;
-          background-color: white;
+          background-color: white;               
+
       }
 
       .list-group-item {
@@ -127,8 +126,15 @@
           } else {
             input.className = "form-control"
           }
+          const username = document.getElementById("username")
+          if ((username.className === "")) {
+            username.className = "dark-theme"
+          } else {
+            username.className = ""
+          }
         })
     </script>
   </body>
 </html>
+
 
